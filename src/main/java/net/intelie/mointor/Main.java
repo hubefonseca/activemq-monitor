@@ -1,5 +1,7 @@
 package net.intelie.mointor;
 
+import net.intelie.mointor.engine.ActiveMQMonitor;
+import net.intelie.mointor.engine.Collector;
 import org.apache.log4j.Logger;
 
 
