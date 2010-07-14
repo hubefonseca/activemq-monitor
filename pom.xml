@@ -14,20 +14,243 @@
 
     <name>ActiveMQ Monitor</name>
 
+    <properties>
+        <watchdog.daemon.name>watchdog</watchdog.daemon.name>
+
+    </properties>
+
     <dependencies>
 
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.15</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jmxtools</artifactId>
+                    <groupId>com.sun.jdmk</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jmxri</artifactId>
+                    <groupId>com.sun.jmx</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jms</artifactId>
+                    <groupId>javax.jms</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
-                <groupId>org.apache.activemq</groupId>
-                <artifactId>activemq-core</artifactId>
-                <version>5.3.1</version>
-            </dependency>
+            <artifactId>mail</artifactId>
+            <groupId>javax.mail</groupId>
+            <version>1.4</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>activation</artifactId>
+                    <groupId>javax.activation</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>5.3.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>activeio-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>kahadb</artifactId>
+                    <groupId>org.apache.activemq</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.osgi.core</artifactId>
+                    <groupId>org.osgi</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.osgi</groupId>
+                    <artifactId>spring-osgi-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.activemq.protobuf</groupId>
+                    <artifactId>activemq-protobuf</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+
+
+            <!-- build engine daemon -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <!-- create-repository -->
+                    <assembleDirectory>
+                        ${project.build.directory}/generated-resources/appassembler/jsw/${watchdog.daemon.name}
+                    </assembleDirectory>
+                    <repoPath>lib</repoPath>
+
+                    <!-- generate-daemons -->
+                    <repositoryLayout>flat</repositoryLayout>
+                    <defaultJvmSettings>
+                        <initialMemorySize>64</initialMemorySize>
+                        <maxMemorySize>128</maxMemorySize>
+                    </defaultJvmSettings>
+
+                    <daemons>
+                        <daemon>
+                            <id>${watchdog.daemon.name}</id>
+                            <mainClass>net.intelie.monitor.Main</mainClass>
+                            <platforms>
+                                <platform>jsw</platform>
+                            </platforms>
+                            <generatorConfigurations>
+                                <generatorConfiguration>
+                                    <generator>jsw</generator>
+                                    <includes>
+                                        <include>linux-x86-32</include>
+                                        <include>linux-x86-64</include>
+                                        <include>macosx-x86-universal-32</include>
+                                    </includes>
+                                    <configuration>
+                                        <property>
+                                            <name>configuration.directory.in.classpath.first</name>
+                                            <value>conf</value>
+                                        </property>
+                                        <property>
+                                            <name>set.default.REPO_DIR</name>
+                                            <value>lib</value>
+                                        </property>
+                                        <property>
+                                            <name>wrapper.logfile</name>
+                                            <value>logs/${watchdog.daemon.name}-YYYYMMDD.log</value>
+                                        </property>
+                                        <property>
+                                            <name>wrapper.logfile.rollmode</name>
+                                            <value>DATE</value>
+                                        </property>
+                                        <property>
+                                            <name>wrapper.logfile.maxsize</name>
+                                            <value>50m</value>
+                                        </property>
+                                        <property>
+                                            <name>wrapper.logfile.maxfiles</name>
+                                            <value>10</value>
+                                        </property>
+                                    </configuration>
+                                </generatorConfiguration>
+                            </generatorConfigurations>
+                        </daemon>
+                    </daemons>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>generate-jsw-scripts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>create-repository</goal>
+                            <goal>generate-daemons</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>before</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <tasks unless="maven.test.skip">
+                                <move file="${project.build.directory}/classes/activemq-monitor.properties"
+                                      tofile="${project.build.directory}/generated-resources/appassembler/jsw/${watchdog.daemon.name}/conf/activemq-monitor.properties"/>
+                                <move file="${project.build.directory}/classes/mail.properties"
+                                      tofile="${project.build.directory}/generated-resources/appassembler/jsw/${watchdog.daemon.name}/conf/mail.properties"/>
+                                <move file="${project.build.directory}/classes/log4j.xml"
+                                      tofile="${project.build.directory}/generated-resources/appassembler/jsw/${watchdog.daemon.name}/conf/log4j.xml"/>
+                                <delete file="${project.build.directory}/classes/activemq-monitor.properties"/>
+                                <delete file="${project.build.directory}/classes/mail.properties"/>
+                                <delete file="${project.build.directory}/classes/log4j.xml"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>after</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks unless="maven.test.skip">
+                                <mkdir dir="${project.build.directory}/generated-resources/appassembler/jsw/${watchdog.daemon.name}/logs"/>
+                                <chmod file="${project.build.directory}/generated-resources/appassembler/jsw/${watchdog.daemon.name}/bin/${watchdog.daemon.name}"
+                                       perm="+x"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-2</version>
+                <configuration>
+                    <descriptor>src/main/resources/assembly/watchdog.xml</descriptor>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+
+    </build>
+
 
 </project>
