@@ -75,10 +75,11 @@ public class QueueMonitor {
             boolean notify = true;
 
             long lastCheck = lastChecks.get(lastChecks.size() - 1);
-            for (int i = lastChecks.size() - 2; lastChecks.size() - i >= EVENTS_BEFORE_NOTIFY; i--) {
+            for (int i = lastChecks.size() - 2; lastChecks.size() - i <= EVENTS_BEFORE_NOTIFY; i--) {
                 if (lastCheck != lastChecks.get(i)) {
                     notify = false;
                 }
+                lastCheck = lastChecks.get(i);
             }
 
             long now = System.currentTimeMillis();
