@@ -7,7 +7,7 @@ ActiveMQ deve estar instalado e com JMX remoto habilitado:
 	<broker brokerName="localhost" useJmx="true">
 
 		<managementContext>
-           	<managementContext connectorPort="2011" jmxDomainName="org.apache.activemq"/>
+           		<managementContext connectorPort="2011" jmxDomainName="org.apache.activemq"/>
         	</managementContext>
 
 		... 
