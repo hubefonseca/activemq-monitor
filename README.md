@@ -1,15 +1,18 @@
 
-INSTALAÇÃO
+Instalação
 ============
-mvn clean package
-cd target
-tar -xvf target/activemq-monitor-1.0-bin.tar.gz
-chmod +x target/activemq-monitor-1.0/bin/*
+	
+	mvn clean package
+	cd target
+	tar -xvf target/activemq-monitor-1.0-bin.tar.gz
+	chmod +x target/activemq-monitor-1.0/bin/*
 
-START
+Start
 ============
-target/activemq-monitor-1.0/bin/watchdog start
 
-STOP
+	target/activemq-monitor-1.0/bin/watchdog start
+
+Stop
 ============
-target/activemq-monitor-1.0/bin/watchdog stop
+
+	target/activemq-monitor-1.0/bin/watchdog stop
