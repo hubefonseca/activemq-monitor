@@ -40,7 +40,7 @@ Having maven installed, you will be able to compile and package:
 	mvn clean package
 	cd target
 	tar -xvf target/activemq-monitor-1.0-bin.tar.gz
-	chmod +x target/activemq-monitor-1.0/bin/*
+	chmod +x activemq-monitor-1.0/bin/*
 
 Note: it was tested on [Ubuntu 10.04]() using sun-java6 binaries (packages sun-java6-{bin,jre}).
 
@@ -50,10 +50,10 @@ Running
 
 To start the daemon, just run:
 
-	./target/activemq-monitor-1.0/bin/watchdog start
+	./activemq-monitor-1.0/bin/watchdog start
 
 To stop:
 
-	./target/activemq-monitor-1.0/bin/watchdog stop
+	./activemq-monitor-1.0/bin/watchdog stop
 
 Enjoy!
