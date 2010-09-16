@@ -1,11 +1,7 @@
-Introduction
-============
+activemq-monitor
+================
 
 activemq-monitor is a simple software that does monitor an [Apache ActiveMQ](http://activemq.apache.org/) queue and if it stop to be consumed, send a notification email.
-
-
-Usage
-=====
 
 Configuring ActiveMQ
 --------------------
@@ -23,12 +19,13 @@ You should enable JMX and JMX via network in ActiveMQ. Please edit your conf/act
 	</broker>
 
 
-Configuring
------------
+Configuring Notifications
+-------------------------
 
 You need to configure the information of your email account, SMTP server and about ActiveMQ in these files:
-- src/main/resources/activemq-monitor.properties
-- src/main/resources/mail.properties
+
+-  src/main/resources/activemq-monitor.properties
+-  src/main/resources/mail.properties
 
 
 Installation
@@ -38,7 +35,7 @@ We use [maven](http://maven.apache.org/) to do the process of compilation and pa
 
     aptitude install maven2
 
-With maven installed, you will be able to compile and package:
+Having maven installed, you will be able to compile and package:
 
 	mvn clean package
 	cd target
@@ -48,8 +45,8 @@ With maven installed, you will be able to compile and package:
 Note: it was tested on [Ubuntu 10.04]() using sun-java6 binaries (packages sun-java6-{bin,jre}).
 
 
-Start and Stop
---------------
+Running
+-------
 
 To start the daemon, just run:
 
@@ -58,3 +55,5 @@ To start the daemon, just run:
 To stop:
 
 	./target/activemq-monitor-1.0/bin/watchdog stop
+
+Enjoy!
