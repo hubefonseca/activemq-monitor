@@ -15,14 +15,19 @@ public class QueueMonitorListener implements Listener {
     private EmailNotifier emailNotifier;
     private List<String> recipients = new ArrayList<String>();
     private String companyName;
+    private List<String> smsRecipients = new ArrayList<String>();
+    private String smsPasscode;
 
-    public QueueMonitorListener(String[] rec, String companyName) {
+    public QueueMonitorListener(String[] rec, String companyName, String[] smsRec, String smsPass) {
         for (String to : rec) {
             recipients.add(to.trim());
         }
-
+        for (String to : smsRec){
+            smsRecipients.add(to.trim());
+        }
         this.companyName = companyName;
         this.emailNotifier = new EmailNotifier();
+        this.smsPasscode = smsPass;
     }
 
     public void notify(Event event) {
@@ -34,7 +39,7 @@ public class QueueMonitorListener implements Listener {
                 logger.warn(to);
             }
 
-            emailNotifier.send(recipients, "[ERRO] Problema no ambiente " + companyName, "A fila " + queueStoppedConsuming.getQueueName() + " parou de ser consumida no ambiente: " + companyName);
+            emailNotifier.send(recipients, smsRecipients, "[ERRO] Problema no ambiente " + companyName, smsPasscode, "A fila " + queueStoppedConsuming.getQueueName() + " parou de ser consumida no ambiente: " + companyName);
         }
     }
 

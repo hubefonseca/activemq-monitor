@@ -28,16 +28,22 @@ public class EmailNotifier {
         }
     }
 
-    public void send(List<String> recipients, String subject, String body) {
+    public void send(List<String> recipients, List<String> smsRecipients, String subject, String smsPasscode, String body) {
         try {
             MimeMessage message = new MimeMessage(session);
-
+            MimeMessage sms = new MimeMessage(session);
             for (String to : recipients) {
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             }
+            for (String toSms : smsRecipients) {
+                sms.addRecipient(Message.RecipientType.TO, new InternetAddress(toSms));
+            }
             message.setSubject(subject);
             message.setText(body);
+            sms.setSubject(smsPasscode);
+            sms.setText(body);
             Transport.send(message);
+            Transport.send(sms);
         }
         catch (MessagingException e) {
             logger.error("Could not send email. Verify correctness of file mail.properties", e);

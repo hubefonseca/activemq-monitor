@@ -47,8 +47,11 @@ public class ActiveMQMonitor {
             String[] recipients = properties.getProperty("recipients").split(",");
             long interval = Long.parseLong(properties.getProperty("minInterval")) * 60 * 1000;
 
+            String[] smsRecipients = properties.getProperty("smsRecipients").split(",");
+            String smsPasscode = properties.getProperty("smsPasscode");
+
             String company = properties.getProperty("company");
-            QueueMonitorListener queueMonitorListener = new QueueMonitorListener(recipients, company);
+            QueueMonitorListener queueMonitorListener = new QueueMonitorListener(recipients, company, smsRecipients, smsPasscode);
 
             String[] monitoredQueues = properties.getProperty("monitor").split(",");
             for (String queueName : monitoredQueues) {
