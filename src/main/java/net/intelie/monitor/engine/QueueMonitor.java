@@ -57,7 +57,7 @@ public class QueueMonitor {
             while (lastChecks.size() > MAX_QUEUE_SIZE) {
                 lastChecks.remove(0);
             }
-
+                                           
             lastChecks.add(queueView.getDequeueCount());
 
             evaluate();

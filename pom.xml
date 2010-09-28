@@ -89,6 +89,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.snmp4j</groupId>
+            <artifactId>snmp4j</artifactId>
+            <version>1.11.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -251,6 +256,18 @@
 
 
     </build>
-
+     <repositories>
+        <repository>
+            <id>snmp4j</id>
+            <name>SNMP4J Library</name>
+            <url>https://server.oosnmp.net/dist/release/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>
